@@ -6,6 +6,12 @@ class App extends Component {
     items : [],
     text :""
     }
+    componentDidMount(){
+      var retrievedObject = localStorage.getItem('memoriesdata');
+      const items= JSON.parse([retrievedObject]);
+      this.setState({items:items,text:""})
+     
+    }
   handleChange = e =>{
     this.setState({text: e.target.value});
   }
@@ -13,16 +19,19 @@ class App extends Component {
      if(this.text!==""){
         const items=[...this.state.items,this.state.text];
         this.setState({items:items,text:""})
+       localStorage.setItem( 'memoriesdata', JSON.stringify( items ) );
+        
       }
-      
-  }
+    }
   handleDelete= id =>{
       const olditems=[...this.state.items]
       const items=olditems.filter((element,i)=>{
         return i!==id
       })
       this.setState({items:items});
+      localStorage.setItem( 'memoriesdata', JSON.stringify( items ) );
   }
+
   render(){
   return (
     <div className="container-fluid my-5">
@@ -40,10 +49,9 @@ class App extends Component {
           </div>
           <div className="container-fluid">
             <ul className="list-unstyle row m-5">
-              {
-                this.state.items.map((value,i) =>{
-                   return <Plan key={i} id={i} value={value} sendData={this.handleDelete}/>
-                })
+              {    this.state.items.map((value,i) =>{
+                     return <Plan key={i} id={i} value={value} sendData={this.handleDelete}/>
+                  })
               }
             </ul>
           </div>
